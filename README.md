@@ -6,3 +6,5 @@ When you make a change in the project you write:
 When you want to get the new changes from the project:
 1. git fetch
 2. git pull
+
+All chess pieces were downloaded from - https://commons.wikimedia.org/wiki/Category:PNG_chess_pieces/Standard_transparent
