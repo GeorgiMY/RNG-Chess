@@ -15,8 +15,7 @@ public class Rook extends Figure {
 
 	@Override
 	public String getImagePath() {
-		// TODO Auto-generated method stub
-		return null;
+		return side ? "assets/Chess_rlt60.png" : "assets/Chess_rdt60.png";
 	}
 
 }

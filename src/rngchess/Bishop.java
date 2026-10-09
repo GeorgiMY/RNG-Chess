@@ -15,8 +15,7 @@ public class Bishop extends Figure {
 
 	@Override
 	public String getImagePath() {
-		// TODO Auto-generated method stub
-		return null;
+		return side ? "assets/Chess_blt60.png" : "assets/Chess_bdt60.png";
 	}
 
 }

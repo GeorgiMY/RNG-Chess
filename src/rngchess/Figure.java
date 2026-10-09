@@ -29,6 +29,10 @@ public abstract class Figure {
 	}
 
 	public boolean canMoveTo(int targetRow, int targetColumn, Figure[][] board) {
+		if (targetRow < 0 || targetRow >= 8 || targetColumn < 0 || targetColumn >= 8) {
+			return false;
+		}
+
 		// A piece cannot move to its own position
 		if (row == targetRow && column == targetColumn) {
 			return false;
@@ -44,7 +48,7 @@ public abstract class Figure {
 		return isValidMovement(targetRow, targetColumn, board);
 	}
 
-	public void moveTo(int targetRow, int targetColumn) {
+	void moveTo(int targetRow, int targetColumn) {
 		row = targetRow;
 		column = targetColumn;
 		hasMoved = true;

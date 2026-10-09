@@ -15,8 +15,7 @@ public class Knight extends Figure {
 
 	@Override
 	public String getImagePath() {
-		// TODO Auto-generated method stub
-		return null;
+		return side ? "assets/Chess_nlt60.png" : "assets/Chess_ndt60.png";
 	}
 
 }

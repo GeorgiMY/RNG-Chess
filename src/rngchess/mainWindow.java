@@ -2,13 +2,14 @@ package rngchess;
 
 import java.awt.Color;
 import java.awt.EventQueue;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.Insets;
 import java.awt.Toolkit;
-import java.util.ArrayList;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -16,7 +17,12 @@ import javax.swing.JPanel;
 public class mainWindow {
 
 	private JFrame frame;
-	private ArrayList<Figure> figures;
+	private final ChessBoard board = new ChessBoard();
+	private final JButton[][] squares = new JButton[8][8];
+
+	private Figure selectedFigure;
+	private int selectedRow = -1;
+	private int selectedColumn = -1;
 
 	/**
 	 * Launch the application.
@@ -68,14 +74,25 @@ public class mainWindow {
 
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
-				JPanel square = new JPanel();
+				JButton square = new JButton();
 
 				if ((i + j) % 2 == 0) {
 					square.setBackground(Color.DARK_GRAY);
 				} else {
 					square.setBackground(Color.white);
 				}
-				square.setVisible(true);
+
+				square.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
+				square.setFocusPainted(false);
+				square.setMargin(new Insets(0, 0, 0, 0));
+				square.setOpaque(true);
+
+				squares[i][j] = square;
+
+				final int row = i;
+				final int column = j;
+				square.addActionListener(event -> handleSquareClick(row, column));
+
 				chessBoard.add(square);
 			}
 		}
@@ -84,14 +101,10 @@ public class mainWindow {
 		panel.setBounds((mainFrameSize - chessBoardSize) / 2, (mainFrameSize - chessBoardSize) / 2, chessBoardSize,
 				chessBoardSize);
 		frame.getContentPane().add(panel);
-		GridBagLayout gbl_panel = new GridBagLayout();
-		gbl_panel.columnWidths = new int[] { 0 };
-		gbl_panel.rowHeights = new int[] { 0 };
-		gbl_panel.columnWeights = new double[] { Double.MIN_VALUE };
-		gbl_panel.rowWeights = new double[] { Double.MIN_VALUE };
 		panel.setLayout(new GridLayout(0, 1, 0, 0));
 
-		addFiguresToChessBoard(chessBoard);
+		addFiguresToChessBoard();
+		renderBoard();
 
 		panel.add(chessBoard);
 
@@ -117,76 +130,119 @@ public class mainWindow {
 
 	}
 
-	private void addFiguresToChessBoard(JPanel chessBoard) {
-		figures = new ArrayList<Figure>();
-		ImageIcon whitePawn = new ImageIcon("assets/Chess_plt60.png");
-		ImageIcon whiteRook = new ImageIcon("assets/Chess_rlt60.png");
-		ImageIcon whiteKnight = new ImageIcon("assets/Chess_nlt60.png");
-		ImageIcon whiteBishop = new ImageIcon("assets/Chess_blt60.png");
-		ImageIcon whiteQueen = new ImageIcon("assets/Chess_qlt60.png");
-		ImageIcon whiteKing = new ImageIcon("assets/Chess_klt60.png");
-
-		ImageIcon blackPawn = new ImageIcon("assets/Chess_pdt60.png");
-		ImageIcon blackRook = new ImageIcon("assets/Chess_rdt60.png");
-		ImageIcon blackKnight = new ImageIcon("assets/Chess_ndt60.png");
-		ImageIcon blackBishop = new ImageIcon("assets/Chess_bdt60.png");
-		ImageIcon blackQueen = new ImageIcon("assets/Chess_qdt60.png");
-		ImageIcon blackKing = new ImageIcon("assets/Chess_kdt60.png");
-
+	private void addFiguresToChessBoard() {
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
-				JPanel square = (JPanel) chessBoard.getComponent(i * 8 + j);
 				Figure figure = null;
-				JLabel label = null;
+
 				// Pawns
 				if (i == 1 || i == 6) {
 					boolean pawnColor = i % 2 == 0;
 					figure = new Pawn(pawnColor, i, j);
-					label = new JLabel(pawnColor ? whitePawn : blackPawn);
-
 				}
 
 				// Rooks
 				if (i == 0 && j == 0 || i == 0 && j == 7 || i == 7 && j == 0 || i == 7 && j == 7) {
 					boolean rookColor = i % 6 == 1;
 					figure = new Rook(rookColor, i, j);
-					label = new JLabel(rookColor ? whiteRook : blackRook);
 				}
 
 				// Knights
 				if (i == 0 && j == 1 || i == 0 && j == 6 || i == 7 && j == 1 || i == 7 && j == 6) {
 					boolean knightColor = i % 5 == 2;
 					figure = new Knight(knightColor, i, j);
-					label = new JLabel(knightColor ? whiteKnight : blackKnight);
 				}
 
 				// Bishops
 				if (i == 0 && j == 2 || i == 0 && j == 5 || i == 7 && j == 2 || i == 7 && j == 5) {
 					boolean bishopColor = i % 4 == 3;
 					figure = new Bishop(bishopColor, i, j);
-					label = new JLabel(bishopColor ? whiteBishop : blackBishop);
 				}
 
 				// Queens
 				if (i == 0 && j == 3 || i == 7 && j == 3) {
 					boolean queenColor = i == 7;
 					figure = new Queen(queenColor, i, j);
-					label = new JLabel(queenColor ? whiteQueen : blackQueen);
 				}
 
 				// Kings
 				if (i == 0 && j == 4 || i == 7 && j == 4) {
 					boolean kingColor = i == 7;
 					figure = new King(kingColor, i, j);
-					label = new JLabel(kingColor ? whiteKing : blackKing);
 				}
 
-				if (label != null) {
-					square.add(label);
-					figures.add(figure);
+				if (figure != null) {
+					board.placeFigure(figure);
 				}
 			}
 		}
+	}
 
+	private void renderBoard() {
+		for (int row = 0; row < 8; row++) {
+			for (int column = 0; column < 8; column++) {
+				JButton square = squares[row][column];
+
+				Figure figure = board.getFigureAt(row, column);
+
+				if (figure != null) {
+					square.setIcon(new ImageIcon(figure.getImagePath()));
+				} else {
+					square.setIcon(null);
+				}
+
+				square.revalidate();
+				square.repaint();
+			}
+		}
+	}
+
+	private void handleSquareClick(int row, int column) {
+
+		// First click: Select a piece.
+		if (selectedFigure == null) {
+			Figure clickedFigure = board.getFigureAt(row, column);
+
+			// The user clicked an empty square.
+			if (clickedFigure == null) {
+				return;
+			}
+
+			selectedFigure = clickedFigure;
+			selectedRow = row;
+			selectedColumn = column;
+
+			squares[row][column].setBorder(BorderFactory.createLineBorder(Color.YELLOW, 3));
+
+			return;
+		}
+
+		// Clicking the selected piece again cancels the selection.
+		if (row == selectedRow && column == selectedColumn) {
+			clearSelection();
+			return;
+		}
+
+		moveSelectedFigure(row, column);
+	}
+
+	private void moveSelectedFigure(int targetRow, int targetColumn) {
+		boolean moved = board.tryMove(selectedRow, selectedColumn, targetRow, targetColumn);
+		clearSelection();
+
+		if (moved) {
+			renderBoard();
+		}
+	}
+
+	private void clearSelection() {
+		if (selectedRow != -1) {
+			squares[selectedRow][selectedColumn].setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
+			squares[selectedRow][selectedColumn].repaint();
+		}
+
+		selectedFigure = null;
+		selectedRow = -1;
+		selectedColumn = -1;
 	}
 }
