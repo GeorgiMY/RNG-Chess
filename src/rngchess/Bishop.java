@@ -9,8 +9,16 @@ public class Bishop extends Figure {
 
 	@Override
 	protected boolean isValidMovement(int targetRow, int targetColumn, Figure[][] board) {
-		// TODO Auto-generated method stub
-		return false;
+		int currentRow = getRow();
+		int currentColumn = getColumn();
+
+		boolean onLine = false;
+		
+		if (Math.abs(targetColumn - currentColumn) != Math.abs(targetRow - currentRow)) {
+			return false;
+		} 
+
+		return true;
 	}
 
 	@Override
