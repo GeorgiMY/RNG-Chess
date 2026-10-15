@@ -9,8 +9,57 @@ public class Queen extends Figure {
 
 	@Override
 	protected boolean isValidMovement(int targetRow, int targetColumn, Figure[][] board) {
-		// TODO Auto-generated method stub
-		return false;
+		int currentRow = getRow();
+		int currentColumn = getColumn();
+		
+		boolean isMovementHorizontalOrVertical = false;
+		
+		if (currentRow == targetRow || currentColumn == targetColumn) {
+			isMovementHorizontalOrVertical = true;
+		}
+		
+		if (isMovementHorizontalOrVertical) {
+			boolean horizontalMove = currentRow == targetRow;
+			boolean verticalMove = currentColumn == targetColumn;
+
+			if (!horizontalMove && !verticalMove) {
+				return false;
+			}
+
+			int rowStep = Integer.compare(targetRow, currentRow);
+			int columnStep = Integer.compare(targetColumn, currentColumn);
+
+			int row = currentRow + rowStep;
+			int column = currentColumn + columnStep;
+
+			// Check every square before the destination.
+			while (row != targetRow || column != targetColumn) {
+				if (board[row][column] != null) {
+					return false;
+				}
+
+				row += rowStep;
+				column += columnStep;
+			}
+		}
+		else {
+			if (Math.abs(targetColumn - currentColumn) != Math.abs(targetRow - currentRow)) {
+				return false;
+			}
+
+			int rowDirection = targetRow > currentRow ? 1 : -1;
+			int columnDirection = targetColumn > currentColumn ? 1 : -1;
+
+			while (targetRow != currentRow && targetColumn != currentColumn) {
+				currentRow += rowDirection;
+				currentColumn += columnDirection;
+				if (board[currentRow][currentColumn] != null) {
+					return false;
+				}
+			}
+		}
+		
+		return true;
 	}
 
 	@Override
