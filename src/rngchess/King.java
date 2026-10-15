@@ -15,11 +15,7 @@ public class King extends Figure {
 		int distanceRow = Math.abs(targetRow - currentRow);
 		int distanceColumn = Math.abs(targetColumn - currentColumn);
 		
-		if (distanceRow > 1 || distanceColumn > 1) {
-			return false;
-		}
-		
-		return true;
+		return distanceRow == 1 || distanceColumn == 1;
 	}
 
 	@Override
