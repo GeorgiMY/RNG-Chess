@@ -9,8 +9,17 @@ public class King extends Figure {
 
 	@Override
 	protected boolean isValidMovement(int targetRow, int targetColumn, Figure[][] board) {
-		// TODO Auto-generated method stub
-		return false;
+		int currentRow = getRow();
+		int currentColumn = getColumn();
+
+		int distanceRow = Math.abs(targetRow - currentRow);
+		int distanceColumn = Math.abs(targetColumn - currentColumn);
+		
+		if (distanceRow > 1 || distanceColumn > 1) {
+			return false;
+		}
+		
+		return true;
 	}
 
 	@Override
