@@ -1,5 +1,8 @@
 package rngchess;
-
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.JFrame;
+import javax.swing.*;
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.GridLayout;
@@ -23,6 +26,9 @@ public class mainWindow {
 	private Figure selectedFigure;
 	private int selectedRow = -1;
 	private int selectedColumn = -1;
+	String lastCapturedPiece = "";
+	int capB =0;
+	int capW =0;
 
 	/**
 	 * Launch the application.
@@ -53,8 +59,8 @@ public class mainWindow {
 	private void initialize() {
 		int screenWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
 		int screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
-		int mainFrameSize = 640;
-		int chessBoardSize = 500;
+		int mainFrameSize = 720;
+		int chessBoardSize = 420;
 
 		int windowXPosition = (screenWidth - mainFrameSize) / 2;
 		int windowYPosition = (screenHeight - mainFrameSize) / 2;
@@ -123,10 +129,30 @@ public class mainWindow {
 				chessBoardSize);
 		frame.getContentPane().add(numbers);
 		numbers.setLayout(new GridLayout(8, 1));
+
+		
+
 		for (int i = 8; i > 0; i--) {
+
 			JLabel ltr = new JLabel(Integer.toString(i));
 			numbers.add(ltr);
 		}
+		
+		JPanel capWhite = new JPanel();
+		capWhite.setBounds(54, 581, 594, 67);
+		capWhite.setLayout(new GridBagLayout());
+		capWhite.setLayout(new GridBagLayout());
+		capWhite.add(new JLabel(new ImageIcon(lastCapturedPiece)));
+		capWhite.setVisible(true);
+		
+		frame.getContentPane().add(capWhite);
+
+		JPanel capBlack = new JPanel();
+		capBlack.setLayout(new GridBagLayout());
+		capBlack.add(new JLabel(new ImageIcon(lastCapturedPiece)));
+		capBlack.setBounds(54, 42, 594, 67);
+		capBlack.setVisible(true);
+		frame.getContentPane().add(capBlack);
 
 	}
 
@@ -232,6 +258,8 @@ public class mainWindow {
 
 		if (moved) {
 			renderBoard();
+			lastCapturedPiece = board.getFigureAt(targetRow, targetColumn).getImagePath();
+			
 		}
 	}
 
@@ -245,4 +273,7 @@ public class mainWindow {
 		selectedRow = -1;
 		selectedColumn = -1;
 	}
+
+	
+	
 }
