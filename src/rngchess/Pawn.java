@@ -22,11 +22,19 @@ public class Pawn extends Figure {
 		if (stepsWantedHorizontally > allowedSteps) {
 			return false;
 		}
+		else {
+			if (targetRow == currentRow) {
+				return false;
+			}
+			if (stepsWantedVertically == 0 && board[targetRow][targetColumn] != null) {
+				return false;
+			}
+		}
 
 		if (stepsWantedVertically > 1) {
 			return false;
 		}
-
+		
 		if (stepsWantedVertically == 1) {
 			if (board[targetRow][targetColumn] == null) {
 				return false;
@@ -44,12 +52,13 @@ public class Pawn extends Figure {
 		}
 
 		int direction = side ? 1 : -1;
-
+		
 		if (allowedSteps == 2 && stepsWantedHorizontally == 2) {
 			if (board[targetRow + direction][targetColumn] != null) {
 				return false;
 			}
 		}
+		
 
 		hasMoved = true;
 		return true;

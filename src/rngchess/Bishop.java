@@ -12,11 +12,20 @@ public class Bishop extends Figure {
 		int currentRow = getRow();
 		int currentColumn = getColumn();
 
-		boolean onLine = false;
-		
 		if (Math.abs(targetColumn - currentColumn) != Math.abs(targetRow - currentRow)) {
 			return false;
-		} 
+		}
+
+		int rowDirection = targetRow > currentRow ? 1 : -1;
+		int columnDirection = targetColumn > currentColumn ? 1 : -1;
+
+		while (targetRow != currentRow && targetColumn != currentColumn) {
+			currentRow += rowDirection;
+			currentColumn += columnDirection;
+			if (board[currentRow][currentColumn] != null) {
+				return false;
+			}
+		}
 
 		return true;
 	}
