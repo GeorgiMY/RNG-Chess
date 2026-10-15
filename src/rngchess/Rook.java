@@ -9,8 +9,33 @@ public class Rook extends Figure {
 
 	@Override
 	protected boolean isValidMovement(int targetRow, int targetColumn, Figure[][] board) {
-		// TODO Auto-generated method stub
-		return false;
+		int currentRow = getRow();
+		int currentColumn = getColumn();
+
+		boolean horizontalMove = currentRow == targetRow;
+		boolean verticalMove = currentColumn == targetColumn;
+
+		if (!horizontalMove && !verticalMove) {
+			return false;
+		}
+
+		int rowStep = Integer.compare(targetRow, currentRow);
+		int columnStep = Integer.compare(targetColumn, currentColumn);
+
+		int row = currentRow + rowStep;
+		int column = currentColumn + columnStep;
+
+		// Check every square before the destination.
+		while (row != targetRow || column != targetColumn) {
+			if (board[row][column] != null) {
+				return false;
+			}
+
+			row += rowStep;
+			column += columnStep;
+		}
+
+		return true;
 	}
 
 	@Override

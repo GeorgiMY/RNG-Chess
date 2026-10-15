@@ -48,10 +48,9 @@ public class ChessBoard {
 	}
 
 	private boolean isMoveAllowed(Figure movingFigure, int targetRow, int targetColumn) {
-		// Add future rules here. For example:
-		// if (!movingFigure.canMoveTo(targetRow, targetColumn, board)) {
-		// return false;
-		// }
+		if (!movingFigure.canMoveTo(targetRow, targetColumn, board)) {
+			return false;
+		}
 		return true;
 	}
 

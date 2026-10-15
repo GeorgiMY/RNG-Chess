@@ -4,7 +4,7 @@ public abstract class Figure {
 	protected final boolean side;
 	private int row;
 	private int column;
-	private boolean hasMoved;
+	protected boolean hasMoved;
 
 	protected Figure(boolean side, int row, int column) {
 		this.side = side;
