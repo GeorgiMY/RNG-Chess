@@ -27,8 +27,8 @@ public class mainWindow {
 	private int selectedRow = -1;
 	private int selectedColumn = -1;
 	String lastCapturedPiece = "";
-	int capB =0;
-	int capW =0;
+	boolean lastCapped = false;
+	boolean lastMovedPieceColor;
 
 	/**
 	 * Launch the application.
@@ -253,12 +253,13 @@ public class mainWindow {
 	}
 
 	private void moveSelectedFigure(int targetRow, int targetColumn) {
-		boolean moved = board.tryMove(selectedRow, selectedColumn, targetRow, targetColumn);
+		boolean moved = board.tryMove(selectedRow, selectedColumn, targetRow, targetColumn,lastMovedPieceColor);
 		clearSelection();
 
 		if (moved) {
 			renderBoard();
 			lastCapturedPiece = board.getFigureAt(targetRow, targetColumn).getImagePath();
+			lastMovedPieceColor = board.getFigureAt(targetRow,targetColumn).getSide();
 			
 		}
 	}

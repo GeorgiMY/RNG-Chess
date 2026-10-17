@@ -21,7 +21,7 @@ public class ChessBoard {
 		board[row][column] = figure;
 	}
 
-	public boolean tryMove(int sourceRow, int sourceColumn, int targetRow, int targetColumn) {
+	public boolean tryMove(int sourceRow, int sourceColumn, int targetRow, int targetColumn, boolean lastMovedSide) {
 		if (!isInsideBoard(sourceRow, sourceColumn) || !isInsideBoard(targetRow, targetColumn)) {
 			return false;
 		}
@@ -31,6 +31,7 @@ public class ChessBoard {
 		}
 
 		Figure movingFigure = board[sourceRow][sourceColumn];
+		
 
 		if (movingFigure == null) {
 			return false;
@@ -39,11 +40,15 @@ public class ChessBoard {
 		if (!isMoveAllowed(movingFigure, targetRow, targetColumn)) {
 			return false;
 		}
+		
+		if (movingFigure.getSide()==lastMovedSide) {
+			return false;
+		}
 
 		board[sourceRow][sourceColumn] = null;
 		board[targetRow][targetColumn] = movingFigure;
 		movingFigure.moveTo(targetRow, targetColumn);
-
+		
 		return true;
 	}
 
@@ -57,4 +62,6 @@ public class ChessBoard {
 	private boolean isInsideBoard(int row, int column) {
 		return row >= 0 && row < SIZE && column >= 0 && column < SIZE;
 	}
+	
+
 }

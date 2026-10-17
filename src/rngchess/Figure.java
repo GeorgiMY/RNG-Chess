@@ -6,10 +6,13 @@ public abstract class Figure {
 	private int column;
 	protected boolean hasMoved;
 
+	
+
 	protected Figure(boolean side, int row, int column) {
 		this.side = side;
 		this.row = row;
 		this.column = column;
+		
 	}
 
 	public boolean getSide() {
@@ -27,12 +30,13 @@ public abstract class Figure {
 	public boolean hasMoved() {
 		return hasMoved;
 	}
+	
 
 	public boolean canMoveTo(int targetRow, int targetColumn, Figure[][] board) {
 		if (targetRow < 0 || targetRow >= 8 || targetColumn < 0 || targetColumn >= 8) {
 			return false;
 		}
-
+		
 		// A piece cannot move to its own position
 		if (row == targetRow && column == targetColumn) {
 			return false;
@@ -52,6 +56,7 @@ public abstract class Figure {
 		row = targetRow;
 		column = targetColumn;
 		hasMoved = true;
+		
 	}
 
 	protected abstract boolean isValidMovement(int targetRow, int targetColumn, Figure[][] board);
