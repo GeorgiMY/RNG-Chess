@@ -26,7 +26,8 @@ public class mainWindow {
 	private Figure selectedFigure;
 	private int selectedRow = -1;
 	private int selectedColumn = -1;
-	String lastCapturedPiece = "";
+	private JPanel capWhite;
+	private JPanel capBlack;
 	boolean lastCapped = false;
 	boolean lastMovedPieceColor;
 
@@ -138,18 +139,12 @@ public class mainWindow {
 			numbers.add(ltr);
 		}
 		
-		JPanel capWhite = new JPanel();
+		capWhite = new JPanel(new FlowLayout(FlowLayout.LEFT, 2, 2));
 		capWhite.setBounds(54, 581, 594, 67);
-		capWhite.setLayout(new GridBagLayout());
-		capWhite.setLayout(new GridBagLayout());
-		capWhite.add(new JLabel(new ImageIcon(lastCapturedPiece)));
 		capWhite.setVisible(true);
-		
 		frame.getContentPane().add(capWhite);
 
-		JPanel capBlack = new JPanel();
-		capBlack.setLayout(new GridBagLayout());
-		capBlack.add(new JLabel(new ImageIcon(lastCapturedPiece)));
+		capBlack = new JPanel(new FlowLayout(FlowLayout.LEFT, 2, 2));
 		capBlack.setBounds(54, 42, 594, 67);
 		capBlack.setVisible(true);
 		frame.getContentPane().add(capBlack);
@@ -253,12 +248,16 @@ public class mainWindow {
 	}
 
 	private void moveSelectedFigure(int targetRow, int targetColumn) {
+		Figure target = board.getFigureAt(targetRow, targetColumn);
 		boolean moved = board.tryMove(selectedRow, selectedColumn, targetRow, targetColumn,lastMovedPieceColor);
 		clearSelection();
-
+		
 		if (moved) {
 			renderBoard();
-			lastCapturedPiece = board.getFigureAt(targetRow, targetColumn).getImagePath();
+			if (target != null) {
+				addCapturedPiece(target);
+			}
+			
 			lastMovedPieceColor = board.getFigureAt(targetRow,targetColumn).getSide();
 			
 		}
@@ -274,7 +273,18 @@ public class mainWindow {
 		selectedRow = -1;
 		selectedColumn = -1;
 	}
+	private void addCapturedPiece(Figure captured) {
+		Image img = new ImageIcon(captured.getImagePath()).getImage()
+				.getScaledInstance(36, 36, Image.SCALE_SMOOTH);
+		JLabel label = new JLabel(new ImageIcon(img));
 
+		// White is `true` (row 7 / bottom). A captured black piece goes to White's panel,
+		// a captured white piece goes to Black's panel.
+		JPanel panel = captured.getSide() ? capBlack : capWhite;
+		panel.add(label);
+		panel.revalidate();
+		panel.repaint();
+	}
 	
 	
 }
